@@ -11,7 +11,7 @@
 在导入cna脚本之前，只需要修改当前路径$path为powershell_bypass.cna所在的真实路径即可。
 
 
-![/image-20210712171240246](images/image-20210712171240246.png)
+![/image-20210712171240246](images/image-20210830144856705.png)
 
 选择Cobalt Strike生成BIN文件。
 
