@@ -10,7 +10,6 @@
 
 在导入cna脚本之前，只需要修改当前路径$path为powershell_bypass.cna所在的真实路径即可。
 
-*注意：均是两个斜杠*
 
 ![/image-20210712171240246](images/image-20210712171240246.png)
 
