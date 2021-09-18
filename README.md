@@ -47,7 +47,7 @@
 
 ![image-20210718161334709](images/image-20210718161334709.png)
 
-必须同时存在bin文件和ico图标
+必须同时存在bin文件和ico图标，才能正常使用
 ## 参考文章
 
 https://www.jianshu.com/p/fb078a99e0d8
