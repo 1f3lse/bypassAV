@@ -4,8 +4,12 @@ popup powershell {
 	item("&生成exe",{dialog_powershell()});
 }
 
-$path = "F:\\插件\\bypassAV-master";
-$output_file = $path."\\output";
+$path = "F:\\插件\\bypassAV-master\\bypassAV-master";
+$time = ticks();
+$time_format =  formatDate("yy-MM-dd_HH-mm-ss");
+$output = $time_format."_output";
+
+$output_file = $path.'\\'.$output;
 
 global('$char_code');
 global('$new_strs');
