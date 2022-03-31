@@ -12,6 +12,7 @@
 - 删除ico图标
 - 生成的```c:\windows\temp\payload_tmp.ps1```作为临时文件，使用后并删除
 - 使用简单的base64编码处理shellcode
+- 
 
 修改了部分代码，再重新写份使用说明。
 
