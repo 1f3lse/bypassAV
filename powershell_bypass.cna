@@ -59,7 +59,7 @@ sub show {
 				$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$paths.' -noConsole -runtime20 | powershell -ExecutionPolicy bypass');
 			}
 			@data = readAll($process);
-			println(@data);
+			# println(@data);
 			closef($process);
 			if (-exists $paths) {
 				exec('cmd.exe /c del '.$payload_file_ps1);
