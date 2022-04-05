@@ -1372,11 +1372,11 @@ if( $cr.Errors.Count -gt 0 ) {
 			$cr.TempFiles | Remove-Item -Verbose:$false -Force -ErrorAction SilentlyContinue
 		}
 		if( $runtime20 ) {
-			$configFileForEXE2 | Set-Content ($outputFile+".config")
+			#$configFileForEXE2 | Set-Content ($outputFile+".config")
 			Write-Host "Config file for EXE created."
 		}
 		if( $runtime30 -or $runtime40 -or $runtime50) {
-			$configFileForEXE3 | Set-Content ($outputFile+".config")
+			#$configFileForEXE3 | Set-Content ($outputFile+".config")
 			Write-Host "Config file for EXE created."
 		}
 	} else {
