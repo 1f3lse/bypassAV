@@ -56,7 +56,7 @@ sub show {
 			if ($int_version == "4") {
 				$process = exec('powershell.exe -ExecutionPolicy bypass "'.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$paths.' -noConsole -runtime40" ');
 			} else {
-				$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$paths.' -noConsole -runtime20 | powershell -ggeng');
+				$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$paths.' -noConsole -runtime20 | powershell -');
 			}
 			@data = readAll($process);
 			println(@data);
