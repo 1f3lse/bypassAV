@@ -25,9 +25,7 @@
 
 选择刚才生成的bin文件，以及powershell的版本，点击即可生成exe可执行文件，
 
-![image-20220324174256453](images/image-20220324174256453.png)
-
-
+![image-20220421152337126](images/image-20220421152337126.png)
 
 使用powershell 4.0上线server 2012
 
