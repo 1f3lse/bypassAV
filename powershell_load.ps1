@@ -1,3 +1,5 @@
+###
+
 Set-StrictMode -Version 2
 
 function func_get_delegate_type_new {
