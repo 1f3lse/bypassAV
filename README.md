@@ -6,6 +6,7 @@
 
 *注：建议在powershell 4.0版本以上机器运行，可向下兼容powershell 2.0。*
 
+(师傅们别传VT了，没姿势了。呜呜呜~)
 ## 更新日志2022/7/27
 
 - 生成的```c:\windows\temp\payload_tmp.ps1```作为临时文件
