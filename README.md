@@ -36,9 +36,9 @@
 
 ![image-20210711183204262](images/image-20210711183204262.png)
 
-选择刚才生成的bin文件、ico图标，以及powershell的版本，点击即可生成exe可执行文件，
+选择刚才生成的bin文件、ico图标，以及powershell的版本，点击即可生成exe可执行文件
 
-![image-20220421152337126](images/image-20220421152337126.png)
+![image-20220421152337126](images/Snipaste_2023-02-28_09-10-40.jpg)
 
 使用powershell 4.0上线server 2012
 
